@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import { useState, } from 'react'
+import { useState,} from 'react'
 // import TaskManager from './TaskManager.js';
 /*  const [task, setTask] = useState(
       {
@@ -23,53 +23,99 @@ import { useState, } from 'react'
    onPress= {() => {addTask()}}>
    
   </Button>
+      <Text style={{padding: 10, fontSize: 42}}>
+    {tname
+    .split(' ')
+    .map(word => word && 'hello')
+    .join('')}
+    </Text>
+    ✔
   */
 function TaskManager(){
   const initialList =[
     {
         id: "",
         title:"",
-        completed:""
+        completed:false
     }
-  ];
+  ]; 
   // An Array to store tasks
-  const[task, setTask]= useState({});
-  const[tid, setId] = useState(1);
-  const[taskList, setTaskList] = useState(initialList); 
-  let tinput="3";
-  // let updatedValue={};
 
+  // Constant for checkmark status
+  const[checked, setCheck]= useState(false);
+
+  // Constant for task setting 
+  const[task, setTask]= useState({});
+
+  // Constant for id setting
+  const[tid, setId] = useState(1);
+
+  // Constant for list of tasks
+  const[taskList, setTaskList] = useState([]);
+  const[tname, setTaskName] = useState(''); 
+  // let tinput="3";
+  //const handleChange = () => {setCheck(!checked);};
+
+  // let updatedValue={};
   function addTask(){
-    
+    setTaskName(tname);
     setId(tid + 1);
     updatedValue={
       id: tid,
-      title: "Math Test" + tid,
+      title: tname,
       completed: false
     };
+    setTask(updatedValue);
     const newList = () => ([...taskList, updatedValue]);
     // newList (updatedValue);
+    // setTaskList(newList);
     setTaskList(newList);
     console.log(taskList);
   }
 
+  function toggleTask()
+  {
+      //newUpdate = {...updatedTask};
+      //newUpdate.completed = !updatedTask.completed;
+      const toggle = (index) => {setTaskList(taskList.map((task, idx) => idx === index?task.completed = !task.completed:''))};
+      console.log(taskList);
+  }
 
   return(
   <>
+  <Text>Add Tasks!</Text>
+  
   <TextInput
    style={styles.input}
+   onChangeText={setTaskName}
+   value={tname}
    placeholder="Add New Task..."
-   value={task}
+   // clearTextOnFocus
+   clearButtonMode = 'while-editing'
    >
-
   </TextInput>
+   <Text>[{tname}]</Text>
+  
   <Button
-    
    title="addTask"
    defaultValue={task}
-   onPress= {() => {addTask()}}>
+   onPress= {addTask}>
   </Button>
-  <Text>console.log(task); </Text>
+
+  <View style={styles.taskStyle}>
+  {taskList.map((task, index) => 
+  <Text
+    key={index}>{task.id}: {task.title} {task.completed?"✔":"X"}
+    <Button
+     title="complete"
+     defaultValue={setTask}
+     onPress={() => toggleTask(index)}
+    >
+      
+
+    </Button>
+  </Text>)}
+  </View>
   </>
   );
 };
@@ -97,6 +143,12 @@ const styles = StyleSheet.create({
     width: 300,
     margin: 20,
     borderWidth: 1,
-    padding: 40
+    borderRadius: 10,
+    padding: 10
+  },
+  taskStyle:{
+    margin: 50,
+    alignItems:'flex-start',
+    textAlign:'left'
   }
 });
