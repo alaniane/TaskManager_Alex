@@ -67,18 +67,54 @@ function TaskManager(){
     };
     setTask(updatedValue);
     const newList = () => ([...taskList, updatedValue]);
-    // newList (updatedValue);
-    // setTaskList(newList);
     setTaskList(newList);
     console.log(taskList);
   }
 
-  function toggleTask()
+  function toggleTask(completedTask, taskList)
   {
-      //newUpdate = {...updatedTask};
-      //newUpdate.completed = !updatedTask.completed;
-      const toggle = (index) => {setTaskList(taskList.map((task, idx) => idx === index?task.completed = !task.completed:''))};
+      // first create a new object from the task to be toggled with the
+      //    toggle update (completed field)
+      updatedValue =
+      {
+        id: completedTask.id,
+        title: completedTask.title,
+        completed: !completedTask.completed
+
+      }
+
+      // grab the id for the task to toggle
+      const idChange = completedTask.id;
+
+      //  grab a list of all of the tasks that come before the task to update in the list
+      const firstElements = taskList.filter(idx => (idx === undefined || idx.id < idChange));
+
+      //  grab a list of all of the tasks that come after the task to update in the list
+      const lastElements = taskList.filter(idx => (idx === undefined || idx.id > idChange));
+
+      //  combine the two lists with the new updated task
+      const newList = [...firstElements, updatedValue, ...lastElements];
+
+      // set the task list to the new combined tasks
+      setTaskList(newList);
+      
+
+      /*  debug lines
+      console.log('completed task: ')
+      console.log(completedTask);
+      console.log(completedTask.id);
+      console.log('first Elements: ');
+      console.log(firstElements);
+      console.log('last Elements: ');
+      console.log(lastElements);
+      //console.log(`last Elements: ${lastElements}`);
+      console.log('new list: ');
+      console.log(newList);
+      console.log('updated value: ');
+      console.log(updatedValue);
+      
       console.log(taskList);
+      */
   }
 
   return(
@@ -109,7 +145,7 @@ function TaskManager(){
     <Button
      title="complete"
      defaultValue={setTask}
-     onPress={() => toggleTask(index)}
+     onPress={() => toggleTask(task, taskList)}
     >
       
 
